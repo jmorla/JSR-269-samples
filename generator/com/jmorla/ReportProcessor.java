@@ -23,20 +23,22 @@ public class ReportProcessor extends AbstractProcessor {
                 switch (element.getKind()) {
                     case CLASS:
                         System.out.println("[%s] is a class".formatted(element.getSimpleName()));
-                        handleClass(element);
+                        handleEnclosedElements(element);
                         break;
                     case INTERFACE:
                         System.out.println("[%s] is an interface".formatted(element.getSimpleName()));
+                        handleEnclosedElements(element);
                         break;
                     default:
                         System.out.println("[%s] is an [%s]".formatted(element.getSimpleName(), element.getKind()));
+                        handleEnclosedElements(element);
                 }
             }
         }
         return false;
     }
     
-    private static void handleClass(Element element) {
+    private static void handleEnclosedElements(Element element) {
         List<? extends Element> members = element.getEnclosedElements();
         for (var member : members) {
             System.out.println("\nkind: [%s] name: [%s]".formatted(member.getKind(), member.getSimpleName()));
