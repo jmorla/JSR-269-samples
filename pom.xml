@@ -11,6 +11,7 @@
     <modules>
         <module>getterX</module>
         <module>getterX-sample</module>
+        <module>mapper-sample</module>
     </modules>
 
     <properties>
