@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Messager;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
@@ -18,30 +19,33 @@ public class ReportProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        var messager = processingEnv.getMessager();
         if (!roundEnv.processingOver()) {
             for (Element element : roundEnv.getRootElements()) {
                 switch (element.getKind()) {
                     case CLASS:
-                        System.out.println("[%s] is a class".formatted(element.getSimpleName()));
-                        handleEnclosedElements(element);
+                        messager.printNote("%s is a class".formatted(element.getSimpleName()));
+                        handleEnclosedElements(element, messager);
                         break;
                     case INTERFACE:
-                        System.out.println("[%s] is an interface".formatted(element.getSimpleName()));
-                        handleEnclosedElements(element);
+                        messager.printNote("%s is an interface".formatted(element.getSimpleName()));
+                        handleEnclosedElements(element, messager);
                         break;
                     default:
-                        System.out.println("[%s] is an [%s]".formatted(element.getSimpleName(), element.getKind()));
-                        handleEnclosedElements(element);
+                        messager.printNote("%s is an %s".formatted(element.getSimpleName(), element.getKind()));
+                        handleEnclosedElements(element, messager);
                 }
             }
+            messager.printWarning("advertencia de prueba");
+            messager.printError("Error de prueba");
         }
         return false;
     }
     
-    private static void handleEnclosedElements(Element element) {
+    private static void handleEnclosedElements(Element element, Messager messager) {
         List<? extends Element> members = element.getEnclosedElements();
         for (var member : members) {
-            System.out.println("\nkind: [%s] name: [%s]".formatted(member.getKind(), member.getSimpleName()));
+            messager.printNote("kind: %s | name: %s".formatted(member.getKind(), member.getSimpleName()));
         }
     }
     
